@@ -7,7 +7,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/login", {
+      const res = await fetch("https://mypage-spring-backend.onrender.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
