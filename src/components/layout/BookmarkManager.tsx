@@ -1,6 +1,8 @@
 "use client";
 
-import { frame, motion, useSpring } from "motion/react";
+import { motion, useSpring,  } from "framer-motion";
+
+
 import {
   type RefObject,
   useEffect,
@@ -60,15 +62,16 @@ const DraggableBall: React.FC<DraggableBallProps> = ({
       ref={ref}
       animate={{ opacity: visible ? baseOpacity : 0 }}
       transition={{ duration: 0.4 }}
-      style={{
-        ...ball,
-        backgroundColor: color.current,
-        x,
-        y,
-        scale,
-      }}
-    />
-  );
+       style={{
+      ...ball,
+      pointerEvents: "none", // ✅ 放回 style 中（但用 as 断言类型）
+      backgroundColor: color.current,
+      x,
+      y,
+      scale,
+    } as any} // ← 断言为 any 避开 TS 对 pointerEvents 的限制
+  />
+);
 };
 
 // ======= 鼠标跟随逻辑（带静止检测）=======
@@ -112,12 +115,11 @@ const useFollowPointer = (
       if (!element) return;
       const rect = element.getBoundingClientRect();
 
-      frame.read(() => {
-        setTimeout(() => {
-          x.set(clientX - rect.width / 2);
-          y.set(clientY - rect.height / 2);
-        }, delay);
-      });
+      setTimeout(() => {
+        x.set(clientX - rect.width / 2);
+        y.set(clientY - rect.height / 2);
+      }, delay);
+      
     };
 
     window.addEventListener("pointermove", handlePointerMove);
