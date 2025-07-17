@@ -1,8 +1,6 @@
 "use client";
 
-import { motion, useSpring,  } from "framer-motion";
-
-
+import { motion, useSpring, MotionValue } from "framer-motion";
 import {
   type RefObject,
   useEffect,
@@ -62,16 +60,23 @@ const DraggableBall: React.FC<DraggableBallProps> = ({
       ref={ref}
       animate={{ opacity: visible ? baseOpacity : 0 }}
       transition={{ duration: 0.4 }}
-       style={{
-      ...ball,
-      pointerEvents: "none", // ✅ 放回 style 中（但用 as 断言类型）
-      backgroundColor: color.current,
-      x,
-      y,
-      scale,
-    } as any} // ← 断言为 any 避开 TS 对 pointerEvents 的限制
-  />
-);
+      style={{
+        width: 16,
+        height: 16,
+        borderRadius: "50%",
+        position: "absolute" as const,
+        top: 0,
+        left: 0,
+        zIndex: 10,
+        // ✅ 以下为 motion 样式
+        backgroundColor: color.current,
+        pointerEvents: "none" as any, // ← 断言解决 TS 报错
+        x,
+        y,
+        scale,
+      }}
+    />
+  );
 };
 
 // ======= 鼠标跟随逻辑（带静止检测）=======
@@ -82,13 +87,13 @@ const useFollowPointer = (
   ref: RefObject<HTMLDivElement | null>,
   delay: number = 0,
   setVisible: Dispatch<SetStateAction<boolean>>
-) => {
+): { x: MotionValue<number>; y: MotionValue<number> } => {
   const x = useSpring(0, spring);
   const y = useSpring(0, spring);
 
   const lastMoveTime = useRef(Date.now());
 
-  // 监听是否鼠标静止 + 小球也静止
+  // 检查是否静止
   useEffect(() => {
     const checkIdle = () => {
       const now = Date.now();
@@ -106,20 +111,21 @@ const useFollowPointer = (
     return () => clearInterval(interval);
   }, [x, y, setVisible]);
 
+  // 鼠标移动
   useEffect(() => {
     const handlePointerMove = ({ clientX, clientY }: MouseEvent) => {
       lastMoveTime.current = Date.now();
-      setVisible(true); // 只要动了就出现
+      setVisible(true);
 
       const element = ref.current;
       if (!element) return;
+
       const rect = element.getBoundingClientRect();
 
       setTimeout(() => {
         x.set(clientX - rect.width / 2);
         y.set(clientY - rect.height / 2);
       }, delay);
-      
     };
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -129,20 +135,9 @@ const useFollowPointer = (
   return { x, y };
 };
 
-// ======= 随机颜色 & 样式 =======
+// ======= 随机颜色 =======
 
 const getRandomColor = () => {
   const hue = Math.floor(Math.random() * 360);
   return `hsl(${hue}, 85%, 60%)`;
-};
-
-const ball = {
-  width: 16,
-  height: 16,
-  borderRadius: "50%",
-  position: "absolute" as const,
-  top: 0,
-  left: 0,
-  pointerEvents: "none",
-  zIndex: 10,
 };
