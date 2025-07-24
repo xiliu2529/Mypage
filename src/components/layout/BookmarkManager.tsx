@@ -1,6 +1,6 @@
 "use client";
 
-import { frame, motion, useSpring } from "motion/react"; // 注意改这里
+import { frame, motion, useSpring } from "framer-motion";
 import {
   type RefObject,
   useEffect,
