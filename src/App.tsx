@@ -6,7 +6,7 @@ import {
   Route,
 } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-
+import { easeOut } from "framer-motion";
 import Header from "./components/layout/Header";
 import BookmarkManager from "./components/layout/BookmarkManager";
 import StarryBackground from "./components/layout/StarryBackground";
@@ -23,7 +23,7 @@ const pageVariants = {
 
 const pageTransition = {
   duration: 0.4,
-  ease: "easeOut",
+  ease: easeOut,
 };
 
 const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
