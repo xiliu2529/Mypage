@@ -1,5 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
-import { motion } from "framer-motion";
+import { Card, CardContent, Typography } from "@mui/material";
 
 const About = () => {
   return (

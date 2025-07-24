@@ -1,4 +1,3 @@
-import React from "react";
 import Particles from "react-tsparticles";
 import type { Engine } from "tsparticles-engine";
 import { loadLinksPreset } from "tsparticles-preset-links";

@@ -1,5 +1,5 @@
 // src/pages/Login.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { login, register } from "../../api";
 import {
   Container,
