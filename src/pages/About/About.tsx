@@ -1,11 +1,24 @@
-// src/pages/About.jsx
+import { Box, Card, CardContent, Typography } from "@mui/material";
+import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <div>
-      <h1>关于我们</h1>
-      <p>这里是关于页面的内容，你可以在这里编辑任何信息。</p>
-    </div>
+    <Card raised>
+      <div style={{ position: "relative", zIndex: 1, pointerEvents: "auto" }}>
+        <CardContent>
+          <Typography variant="h5" style={{ userSelect: "none" }}>
+            进入动画 + 鼠标放大
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            style={{ userSelect: "none" }}
+          >
+            这是用 framer-motion 做的卡片进入动画示例。
+          </Typography>
+        </CardContent>
+      </div>
+    </Card>
   );
 };
 
