@@ -1,5 +1,5 @@
 // src/api/index.js
-const API_BASE = "https://mypage-spring-backend.onrender.com/api/login";
+const API_BASE = "https://mypage-spring-backend.onrender.com/api";
 
 export const login = (username: string, password: string) =>
   fetch(`${API_BASE}/login`, {
