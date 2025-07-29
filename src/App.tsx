@@ -94,8 +94,8 @@ const App: React.FC = () => (
       <Container
         sx={{
           width: "auto",
-          mt: 10,
-          height: "calc(100vh - 80px)",
+          mt: 20,
+          height: "calc(100vh - 160px)",
         }}
       >
         <AnimatedRoutes />

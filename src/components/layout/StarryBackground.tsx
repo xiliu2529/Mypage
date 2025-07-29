@@ -17,6 +17,7 @@ export default function StarryBackground() {
       id="tsparticles"
       init={particlesInit}
       options={{
+        fullScreen: { enable: false },
         preset: "links",
         background: {
           color: {
@@ -59,7 +60,7 @@ export default function StarryBackground() {
         left: 0,
         width: "100vw",
         height: "100vh",
-        zIndex: -1,
+        zIndex: -10,
         pointerEvents: "none", // ✅ 避免遮挡点击
         // will-change: transform
         willChange: "transform",

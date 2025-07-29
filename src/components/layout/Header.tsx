@@ -112,7 +112,7 @@ const Header = () => {
           跟随
         </Button>
         <Button onClick={toggleDarkMode} sx={{ fontSize: "1.5rem" }}>
-          {darkMode ? "亮" : "暗"}
+          {darkMode ? "明" : "暗"}
         </Button>
       </Toolbar>
     </AppBar>
