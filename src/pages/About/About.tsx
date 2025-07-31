@@ -106,7 +106,12 @@ const About = () => {
         transition={{ duration: 0.6 }}
         viewport={{ once: false, amount: 0.4 }} // 这里改成 once: false
       >
-        <Box justifyContent="center" id="section-programmer" m={20}>
+        <Box
+          justifyContent="center"
+          id="section-programmer"
+          m={20}
+          sx={{ scrollMarginTop: "150px" }}
+        >
           <Box sx={{ m: 10 }}>
             <Typography variant="h4" gutterBottom>
               一直想自己做一个网站,拖了很久很久,不过还好,总算在7月开始动手了。
@@ -117,11 +122,41 @@ const About = () => {
           </Box>
           <Grid container spacing={2} justifyContent="center">
             <Typography variant="h4">技术栈：</Typography>
-            <TechCard icon={reactIcon} name="React" level={45} />.
-            <TechCard icon={jsIcon} name="JS/TS" level={45} />
-            <TechCard icon={javaIcon} name="Java" level={25} />
-            <TechCard icon={mysqlIcon} name="Mysql" level={30} />
-            <TechCard icon={pythonIcon} name="Python" level={20} />
+            <TechCard
+              icon={reactIcon}
+              name="React"
+              level={45}
+              desc="用于构建现代 Web UI"
+              hoverDesc="在前两个项目中用的都是React,已掌握组件、状态、Hook 等基础,Redux只做过修改,还需精进。"
+            />
+            <TechCard
+              icon={jsIcon}
+              name="JS/TS"
+              level={45}
+              desc="网页开发的基础语言"
+              hoverDesc="现在主要在React中使用 JS/TS 编写业务逻辑，原生用得较少"
+            />
+            <TechCard
+              icon={javaIcon}
+              name="Java"
+              level={25}
+              desc="后端语言基础"
+              hoverDesc="作为最早接触的语言,但是我实际用的不多,在工作中也只做过小部分的修改,不过理解到了面向对象编程。目前正在学习 Spring Boot、接口开发"
+            />
+            <TechCard
+              icon={mysqlIcon}
+              name="Mysql"
+              level={30}
+              desc="关系型数据库"
+              hoverDesc="掌握基本的增删改查、索引、临时表使用，正在深入学习中间表设计和多表联查"
+            />
+            <TechCard
+              icon={pythonIcon}
+              name="Python"
+              level={20}
+              desc="语法简洁的编程语言"
+              hoverDesc="用过 Python 开发自动化测试系统，目前掌握还不多，适合做小工具，正在继续学习"
+            />
             <GitHubCalendar
               username="xiliu2529"
               blockSize={22}
@@ -135,7 +170,11 @@ const About = () => {
 
       <motion.div
         initial={{ opacity: 0, y: 40, scale: 0.85 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+          scale: 1,
+        }}
         transition={{ duration: 0.6 }}
         viewport={{ once: false, amount: 0.4 }}
       >
