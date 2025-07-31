@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { FaGoogle } from "react-icons/fa";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect } from "react";
 import {
   Box,
   Button,
@@ -20,6 +21,8 @@ import {
 import BaiduIcon from "../../assets/baidu.png";
 import type { TransitionProps } from "@mui/material/transitions";
 import ProximityTiltCard from "../../components/animations/ProximityTiltCard";
+import { useAppContext } from "../../context/useAppContext";
+import { fetchBookmarks, addBookmark } from "../../api/index";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -44,6 +47,7 @@ const sxGlassBox = {
   margin: "auto",
   mt: 5,
   p: 5,
+  width: "900px",
 };
 
 const sxSearchForm = {
@@ -110,6 +114,7 @@ const sxBookmarkText = {
   overflow: "hidden",
   whiteSpace: "nowrap",
   textOverflow: "ellipsis",
+  fontSize: "30px",
 };
 
 const sxDialogTitle = {
@@ -156,17 +161,27 @@ const Home: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const [engineIndex, setEngineIndex] = useState(0);
-  const [bookmarks, setBookmarks] = useState<{ name: string; url: string }[]>(
-    []
-  );
+  const { bookmarks, setBookmarks } = useAppContext();
+
+  console.log("Bookmarks:", bookmarks);
+
   const [siteName, setSiteName] = useState("");
   const [siteUrl, setSiteUrl] = useState("");
   const [open, setOpen] = React.useState(false);
 
+  useEffect(() => {
+    fetchBookmarks()
+      .then((data) => setBookmarks(data))
+      .catch((err) => {
+        console.error("获取收藏夹失败：", err);
+        // toast("加载失败，请稍后再试");
+      });
+  }, []);
+
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!siteName || !siteUrl) return;
 
@@ -176,14 +191,20 @@ const Home: React.FC = () => {
     );
 
     if (isDuplicate) {
-      alert("该名称或网址已存在，不能重复添加！");
+      // toast("该名称或网址已存在，不能重复添加！");
       return;
     }
 
-    setBookmarks((prev) => [...prev, { name: siteName, url: fullUrl }]);
-    setSiteName("");
-    setSiteUrl("");
-    handleClose();
+    try {
+      const saved = await addBookmark({ name: siteName, url: fullUrl }); // ✅ 调用后端
+      setBookmarks((prev) => [...prev, saved]); // ✅ 同步状态
+      setSiteName("");
+      setSiteUrl("");
+      handleClose();
+    } catch (err) {
+      console.error("添加失败：", err);
+      // toast("添加失败，请稍后再试");
+    }
   };
 
   const handleWheel = (e: React.WheelEvent) => {

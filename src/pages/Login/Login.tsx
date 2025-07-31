@@ -1,4 +1,3 @@
-// src/pages/Login.tsx
 import { useState } from "react";
 import { login, register } from "../../api";
 import {
@@ -10,17 +9,18 @@ import {
   Paper,
   Link,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true); // 登录 or 注册
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // 校验状态
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = async () => {
-    // 简单必填校验
     const hasUsernameError = username.trim() === "";
     const hasPasswordError = password.trim() === "";
 
@@ -28,13 +28,24 @@ const Login = () => {
     setPasswordError(hasPasswordError);
 
     if (hasUsernameError || hasPasswordError) return;
+
     try {
       const fn = isLogin ? login : register;
       const data = await fn(username, password);
 
       if (data.success) {
         alert(isLogin ? "✅ 登录成功！" : "✅ 注册成功！");
-        // TODO: 跳转或存储 token
+
+        // 假设后端返回token字段叫token
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          console.log("登录成功，token:", data.token);
+        } else {
+          console.warn("后端未返回 token");
+        }
+
+        // 登录成功后跳转主页（根据你的路由调整）
+        navigate("/");
       } else {
         alert(
           `❌ ${isLogin ? "登录" : "注册"}失败：` + (data.message || "未知错误")
@@ -47,8 +58,8 @@ const Login = () => {
   };
 
   return (
-    <Container sx={{ minWidth: "700px" }}>
-      <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
+    <Container sx={{ width: "700px" }}>
+      <Paper elevation={13} sx={{ p: 4, mt: 8 }}>
         <Typography variant="h4" align="center" gutterBottom>
           {isLogin ? "登录" : "注册"}
         </Typography>

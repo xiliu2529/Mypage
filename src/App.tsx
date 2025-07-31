@@ -92,10 +92,12 @@ const App: React.FC = () => (
     >
       <Header />
       <Container
+        maxWidth={false}
         sx={{
-          width: "auto",
-          mt: 20,
-          height: "calc(100vh - 160px)",
+          width: "100%",
+          mt: 9,
+          height: "calc(100vh - 70px)",
+          overflowY: "auto",
         }}
       >
         <AnimatedRoutes />
