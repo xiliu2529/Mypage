@@ -10,6 +10,7 @@ import javaIcon from "../../assets/icon/java.png";
 import jsIcon from "../../assets/icon/java-script.png";
 import pythonIcon from "../../assets/icon/python.png";
 import { motion } from "framer-motion";
+import Carousel3D from "../../components/animations/Carousel3D";
 
 const About = () => {
   const textList = [
@@ -178,7 +179,12 @@ const About = () => {
         transition={{ duration: 0.6 }}
         viewport={{ once: false, amount: 0.4 }}
       >
-        <Box justifyContent="center" id="section-developer" m={20}>
+        <Box
+          justifyContent="center"
+          id="section-developer"
+          m={10}
+          sx={{ scrollMarginTop: "150px" }}
+        >
           <Box sx={{ m: 10 }}>
             <Typography variant="h4" gutterBottom>
               作为一个游戏玩家，我喜欢探索各种类型的游戏，从角色扮演到策略游戏，每个游戏都有其独特的魅力。
@@ -186,6 +192,8 @@ const About = () => {
             <Typography variant="h4">
               游戏不仅是我的娱乐方式，也是我学习编程和设计思维的重要来源。
             </Typography>
+            <Carousel3D />
+            <Box> 111</Box>
           </Box>
         </Box>
       </motion.div>
