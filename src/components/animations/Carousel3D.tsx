@@ -11,7 +11,7 @@ const Carousel3D: React.FC = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement[]>([]);
   const progress = { value: 0 };
-  const imageSize = 470;
+  const imageSize = 450;
   const radius = imageSize * 1.4;
   const rotationSpeed = useRef(0.0003);
 
@@ -30,7 +30,11 @@ const Carousel3D: React.FC = () => {
     },
     {
       label: "英雄联盟",
-      images: ["images/lol.jpg", "images/lol1.webm"],
+      images: ["images/lol2.jpg", "images/lol1.jpg", "images/lol3.jpg"],
+    },
+    {
+      label: "GTA5",
+      images: ["images/gta5.png", "images/gta5_1.png", "images/gta5_2.png"],
     },
   ];
 
@@ -116,8 +120,9 @@ const Carousel3D: React.FC = () => {
       <Box
         ref={carouselRef}
         sx={{
+          mt: "300px",
           width: "100%",
-          height: "100vh",
+          height: "50vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -165,11 +170,9 @@ const Carousel3D: React.FC = () => {
           >
             <Box
               sx={{
-                transform: "translateY(-20px)",
+                transform: "translateY(-30px)",
                 textAlign: "center",
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "18px",
+                fontSize: "24px",
                 textShadow: "1px 1px 3px rgba(0,0,0,0.6)",
               }}
             >

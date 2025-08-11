@@ -24,7 +24,6 @@ const About = () => {
   const navItems = [
     { label: "程序员", targetId: "section-programmer" },
     { label: "游戏玩家", targetId: "section-developer" },
-    { label: "初级滑雪爱好者", targetId: "section-designer" },
     { label: "共产主义者", targetId: "section-communist" },
   ];
 
@@ -183,7 +182,7 @@ const About = () => {
           justifyContent="center"
           id="section-developer"
           m={10}
-          sx={{ scrollMarginTop: "150px" }}
+          sx={{ scrollMarginTop: "200px" }}
         >
           <Box sx={{ m: 10 }}>
             <Typography variant="h4" gutterBottom>
@@ -193,7 +192,13 @@ const About = () => {
               游戏不仅是我的娱乐方式，也是我学习编程和设计思维的重要来源。
             </Typography>
             <Carousel3D />
-            <Box> 111</Box>
+
+            <Box
+              id="section-communist"
+              sx={{ mt: 30, scrollMarginTop: "200px" }}
+            >
+              111
+            </Box>
           </Box>
         </Box>
       </motion.div>
