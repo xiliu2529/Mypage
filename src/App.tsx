@@ -8,6 +8,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { easeOut } from "framer-motion";
 import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import BookmarkManager from "./components/layout/BookmarkManager";
 import StarryBackground from "./components/layout/StarryBackground";
 import About from "./pages/About/About";
@@ -101,6 +102,7 @@ const App: React.FC = () => (
         }}
       >
         <AnimatedRoutes />
+        <Footer />
       </Container>
     </Box>
   </Router>

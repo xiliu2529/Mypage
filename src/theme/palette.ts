@@ -37,7 +37,7 @@ export const lightPalette = {
   background: { default: "#FDF6F0", paper: "#FFFFFF" },
 
   // 正文文字、次要文字、禁用状态文字
-  text: { primary: "#3E2723", secondary: "#795548", disabled: "#BCAAA4" },
+  text: { primary: "#141414", secondary: "#795548", disabled: "#BCAAA4" },
 
   // 分隔线、边框
   divider: "#D7CCC8",
