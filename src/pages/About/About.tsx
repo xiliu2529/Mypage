@@ -1,7 +1,7 @@
 // pages/About.tsx
 import { Box, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import Typewriter from "../../components/layout/Typewriter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GitHubCalendar from "react-github-calendar";
 import TechCard from "@/components/layout/TechCard";
 import reactIcon from "../../assets/icon/science.png";
@@ -19,6 +19,22 @@ const About = () => {
     "离不开 AI 的程序员",
     "正在学习的半成品全栈开发新手",
   ];
+  const [useYoutube, setUseYoutube] = useState(true);
+  const testYoutube = () => {
+    return new Promise<boolean>((resolve) => {
+      const img = new Image();
+      img.src = "https://www.youtube.com/favicon.ico?" + Date.now();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+    });
+  };
+  useEffect(() => {
+    const check = async () => {
+      const ok = await testYoutube();
+      setUseYoutube(ok);
+    };
+    check();
+  }, []);
 
   const [index, setIndex] = useState(0);
   const navItems = [
@@ -192,13 +208,80 @@ const About = () => {
               游戏不仅是我的娱乐方式，也是我学习编程和设计思维的重要来源。
             </Typography>
             <Carousel3D />
+          </Box>
+        </Box>
+      </motion.div>
 
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.85 }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+          scale: 1,
+        }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: false, amount: 0.4 }}
+      >
+        <Box
+          id="section-communist"
+          m={10}
+          justifyContent="center"
+          sx={{ mt: 30, scrollMarginTop: "150px" }}
+        >
+          <Typography variant="h4" sx={{ lineHeight: 1.8, mb: 2 }}>
+            劳动者是世界的真正创造者，
+            但在资本主义制度下，他们往往被剥削：用自己的劳动换来的只是一份勉强维持生活的工资，
+            而剩余价值却被资本家占有。
+          </Typography>
+
+          <Typography
+            variant="h4"
+            sx={{
+              lineHeight: 1.7,
+              maxWidth: "1200px",
+            }}
+          >
+            共产主义意味着要反对这种不公正，追求一个没有剥削和压迫的社会。
+            在那个社会里，劳动者能够平等地分享自己创造的财富，
             <Box
-              id="section-communist"
-              sx={{ mt: 30, scrollMarginTop: "200px" }}
+              component="span"
+              sx={{
+                fontWeight: "bold",
+                color: "#CC0000",
+              }}
             >
-              111
+              每个人的自由发展都成为一切人的自由发展的条件。
             </Box>
+          </Typography>
+          <Box sx={{ mt: 4, textAlign: "center" }}>
+            {useYoutube ? (
+              <iframe
+                src="https://www.youtube.com/embed/LtsbQiPY2dA?si=dj0PnM4sxxgzG6T0"
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                style={{
+                  borderRadius: 8,
+                  height: "600px",
+                  width: "80%",
+                }}
+              ></iframe>
+            ) : (
+              <iframe
+                src="//player.bilibili.com/player.html?isOutside=true&bvid=BV1Vy4y1B7V2&autoplay=0"
+                allowFullScreen
+                style={{
+                  height: "600px",
+                  width: "80%",
+                  borderRadius: 8,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+                }}
+              ></iframe>
+            )}
+
+            <Typography variant="h5" sx={{ display: "block", mt: 1 }}>
+              推荐观看: 【中文字幕】资本 or 共产？做出你的选择
+            </Typography>
           </Box>
         </Box>
       </motion.div>
