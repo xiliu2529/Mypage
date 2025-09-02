@@ -68,16 +68,13 @@ const Footer: React.FC = () => {
       sx={{
         width: "100%",
         py: 2,
-        mt: "auto",
+        mt: "50px",
         textAlign: "center",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         gap: 1,
         fontSize: 14,
-        position: "fixed",
-        bottom: 0,
-        left: 0,
       }}
     >
       <Typography variant="body2">西留蝙蝠 & xiliubat</Typography>
