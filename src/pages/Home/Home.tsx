@@ -31,10 +31,6 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-// ----------------------------------
-// ✅ 样式变量定义区（命名有逻辑）
-// ----------------------------------
-
 const sxGlassBox = {
   backgroundColor: "rgba(255, 255, 255, 0.2)",
   backdropFilter: "blur(10px)",

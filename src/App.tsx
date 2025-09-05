@@ -14,6 +14,7 @@ import StarryBackground from "./components/layout/StarryBackground";
 import About from "./pages/About/About";
 import HomePage from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
+import User from "./pages/User/User";
 import { Box, Container } from "@mui/material";
 
 const pageVariants = {
@@ -66,6 +67,14 @@ const AnimatedRoutes = () => {
           element={
             <PageWrapper>
               <Login />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/user"
+          element={
+            <PageWrapper>
+              <User />
             </PageWrapper>
           }
         />

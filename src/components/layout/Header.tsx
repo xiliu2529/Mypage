@@ -10,56 +10,61 @@ import {
 } from "@mui/material";
 import trinity from "../../assets/trinity.png";
 import { useAppContext } from "../../context/useAppContext";
-
-// 提取样式变量
-const appBarSx = {
-  backdropFilter: "blur(10px)",
-  backgroundColor: "rgba(255, 255, 255, 0.6)",
-  color: "#222",
-  height: "70px",
-};
-
-const buttonSx = (ballOn: boolean) => ({
-  fontSize: "1.5rem",
-  color: ballOn ? "green" : "red",
-  transition: "color 0.3s ease",
-});
-
-const navStackSx = {
-  flexGrow: 1,
-  display: "flex",
-  justifyContent: "center",
-  gap: "16px", // spacing=2 = 8 * 2 = 16px
-};
-
-const toolbarSx = {
-  justifyContent: "space-between",
-  fontSize: "2rem",
-};
-
-const logoImgSx = {
-  height: 40,
-  width: "auto",
-  mr: 2,
-};
-
-const logoTextSx = {
-  textDecoration: "none",
-  color: "inherit",
-  fontWeight: "bold",
-  fontSize: "3rem",
-};
-
-const linkCommonSx = {
-  padding: "0.5rem",
-  "&:hover": {
-    color: "#28dbb5ff",
-  },
-};
+import { useTheme } from "@mui/material/styles";
 
 const Header = () => {
   const { ballOn, setBallOn, darkMode, toggleDarkMode } = useAppContext();
-  console.log("darkMode", darkMode);
+  const theme = useTheme();
+
+  // 样式变量改成依赖 theme
+  const appBarSx = {
+    backdropFilter: "blur(10px)",
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? "rgba(255,255,255,0.6)"
+        : "rgba(0,0,0,0.6)",
+    color: theme.palette.text.primary,
+    height: "70px",
+  };
+
+  const buttonSx = {
+    fontSize: "1.5rem",
+    color: ballOn ? "FF7043" : "#8CF7D4",
+    transition: "color 0.3s ease",
+  };
+
+  const navStackSx = {
+    flexGrow: 1,
+    display: "flex",
+    justifyContent: "center",
+    gap: theme.spacing(2),
+  };
+
+  const toolbarSx = {
+    justifyContent: "space-between",
+    fontSize: "2rem",
+  };
+
+  const logoImgSx = {
+    height: 40,
+    width: "auto",
+    mr: 2,
+  };
+
+  const logoTextSx = {
+    textDecoration: "none",
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: "3rem",
+  };
+
+  const linkCommonSx = {
+    padding: "0.5rem",
+    color: theme.palette.text.primary,
+    "&:hover": {
+      color: theme.palette.primary.main,
+    },
+  };
 
   return (
     <AppBar position="fixed" elevation={3} sx={appBarSx}>
@@ -82,33 +87,37 @@ const Header = () => {
             component={RouterLink}
             to="/"
             underline="none"
-            color="text.primary"
             sx={linkCommonSx}
           >
             首页
           </Link>
-
           <Link
             component={RouterLink}
             to="/about"
             underline="none"
-            color="text.primary"
             sx={linkCommonSx}
           >
             关于
           </Link>
-
           <Link
             component={RouterLink}
             to="/login"
             underline="none"
-            color="text.primary"
             sx={linkCommonSx}
           >
             登录
           </Link>
+
+          <Link
+            component={RouterLink}
+            to="/user"
+            underline="none"
+            sx={linkCommonSx}
+          >
+            用户名
+          </Link>
         </Stack>
-        <Button onClick={() => setBallOn(!ballOn)} sx={buttonSx(ballOn)}>
+        <Button onClick={() => setBallOn(!ballOn)} sx={buttonSx}>
           跟随
         </Button>
         <Button onClick={toggleDarkMode} sx={{ fontSize: "1.5rem" }}>
