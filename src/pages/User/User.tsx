@@ -1,11 +1,22 @@
-import { Box, Button, ButtonGroup, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup, Typography, Fade } from "@mui/material";
 import ArticleCard from "@/components/layout/ArticleCard";
 import ArticleModal from "@/components/layout/ArticleModal";
 import CalendarModal from "@/components/layout/CalendarModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 const User = () => {
   const [openArticleModal, setOpenArticleModal] = useState(false);
   const [openCalendarModal, setOpenCalendarModal] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    setVisible(false);
+  }, [location]);
   const mockArticles = [
     {
       title: "React 18 新特性详解",
@@ -103,33 +114,25 @@ const User = () => {
         <ArticleCard articles={mockArticles} />
       </Box>
       <Box>
-        <ButtonGroup
-          orientation="vertical"
-          aria-label="Vertical button group"
-          variant="contained"
-          sx={{
-            position: "fixed", // 固定在页面
-            top: "30%", // 垂直居中
-            right: 30, // 靠左
-            transform: "translateY(-50%)", // 让按钮组中心对齐屏幕垂直中心
-            zIndex: 1000, // 确保浮在最上层
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={() => setOpenArticleModal(true)} // ✅ 特定命名
-          >
-            写文章
-          </Button>
-
-          <Button
-            variant="contained"
-            onClick={() => setOpenCalendarModal(true)} // ✅ 特定命名
-          >
-            日历
-          </Button>
-          <Button key="three">Three</Button>
-        </ButtonGroup>
+        {visible && (
+          <Fade in={true} timeout={1000}>
+            <ButtonGroup
+              orientation="vertical"
+              variant="contained"
+              sx={{
+                position: "fixed",
+                top: "30%",
+                right: 30,
+                transform: "translateY(-50%)",
+                zIndex: 1000,
+              }}
+            >
+              <Button onClick={() => setOpenArticleModal(true)}>写文章</Button>
+              <Button onClick={() => setOpenCalendarModal(true)}>日历</Button>
+              <Button onClick={() => setVisible(false)}>关闭</Button>
+            </ButtonGroup>
+          </Fade>
+        )}
         <ArticleModal
           open={openArticleModal}
           onClose={() => setOpenArticleModal(false)}

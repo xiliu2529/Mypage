@@ -8,9 +8,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   // 现有状态
   const [followSpeed, setFollowSpeed] = useState(0);
-  const [ballOn, setBallOn] = useState(false);
+  const [ballOn, setBallOn] = useState(true);
   // 主题状态
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => setDarkMode((prev) => !prev);
   // 根据 darkMode 创建主题
   const theme = useMemo(() => (darkMode ? darkTheme : lightTheme), [darkMode]);
