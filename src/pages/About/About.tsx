@@ -11,8 +11,14 @@ import jsIcon from "../../assets/icon/java-script.png";
 import pythonIcon from "../../assets/icon/python.png";
 import { motion } from "framer-motion";
 import Carousel3D from "../../components/animations/Carousel3D";
+import { useLocation } from "react-router-dom";
 
 const About = () => {
+  const location = useLocation();
+  useEffect(() => {
+    console.log("1Location changed:", location);
+  }, [location]);
+
   const textList = [
     "西留蝙蝠",
     "Xiliubat",

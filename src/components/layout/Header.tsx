@@ -11,10 +11,20 @@ import {
 import trinity from "../../assets/trinity.png";
 import { useAppContext } from "../../context/useAppContext";
 import { useTheme } from "@mui/material/styles";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
-  const { ballOn, setBallOn, darkMode, toggleDarkMode } = useAppContext();
+  const { ballOn, setBallOn, darkMode, toggleDarkMode, setVisible } =
+    useAppContext();
   const theme = useTheme();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== "/user") {
+      setVisible(false);
+    }
+  }, [location, setVisible]);
 
   // 样式变量改成依赖 theme
   const appBarSx = {

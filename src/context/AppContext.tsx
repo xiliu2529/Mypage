@@ -12,6 +12,8 @@ interface AppContextType {
   setBookmarks: React.Dispatch<
     React.SetStateAction<{ name: string; url: string }[]>
   >;
+  visible: boolean;
+  setVisible: (value: boolean) => void;
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);

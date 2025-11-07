@@ -3,20 +3,17 @@ import ArticleCard from "@/components/layout/ArticleCard";
 import ArticleModal from "@/components/layout/ArticleModal";
 import CalendarModal from "@/components/layout/CalendarModal";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useAppContext } from "../../context/useAppContext";
+
 const User = () => {
+  const { visible, setVisible } = useAppContext();
   const [openArticleModal, setOpenArticleModal] = useState(false);
   const [openCalendarModal, setOpenCalendarModal] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const location = useLocation();
-
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 500);
     return () => clearTimeout(timer);
-  }, []);
-  useEffect(() => {
-    setVisible(false);
-  }, [location]);
+  }, [setVisible]);
+
   const mockArticles = [
     {
       title: "React 18 新特性详解",
@@ -127,9 +124,8 @@ const User = () => {
                 zIndex: 1000,
               }}
             >
-              <Button onClick={() => setOpenArticleModal(true)}>写文章</Button>
+              <Button onClick={() => setOpenArticleModal(true)}>写作</Button>
               <Button onClick={() => setOpenCalendarModal(true)}>日历</Button>
-              <Button onClick={() => setVisible(false)}>关闭</Button>
             </ButtonGroup>
           </Fade>
         )}

@@ -1,7 +1,20 @@
 import React, { useState } from "react";
-import { Modal, Box, Typography, TextField, Button } from "@mui/material";
-import ReactQuill from "react-quill-new"; // ✅ 用这个
-import "react-quill-new/dist/quill.snow.css"; // ✅ 样式也改
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+} from "@mui/material";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
+import FormatBoldIcon from "@mui/icons-material/FormatBold";
+import FormatItalicIcon from "@mui/icons-material/FormatItalic";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import TitleIcon from "@mui/icons-material/Title";
 
 interface ArticleModalProps {
   open: boolean;
@@ -15,13 +28,23 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   onSubmit,
 }) => {
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "请输入文章内容...",
+      }),
+    ],
+    content: "",
+  });
 
   const handleSubmit = () => {
+    const content = editor?.getHTML() || "";
     if (title.trim() && content.trim()) {
-      onSubmit(title, content); // content 会是 HTML 字符串
+      onSubmit(title, content);
       setTitle("");
-      setContent("");
+      editor?.commands.clearContent();
       onClose();
     } else {
       alert("标题和内容不能为空！");
@@ -30,17 +53,59 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
 
   const handleCancel = () => {
     setTitle("");
-    setContent("");
+    editor?.commands.clearContent();
     onClose();
   };
 
-  return (
-    <Modal
-      open={open}
-      onClose={handleCancel}
-      aria-labelledby="article-modal-title"
-      aria-describedby="article-modal-content"
+  // ✅ 自定义简单工具栏
+  const Toolbar = () => (
+    <Box
+      sx={{
+        borderBottom: "1px solid #ddd",
+        display: "flex",
+        gap: 1,
+        p: 1,
+      }}
     >
+      <IconButton
+        onClick={() => editor?.chain().focus().toggleBold().run()}
+        color={editor?.isActive("bold") ? "primary" : "default"}
+      >
+        <FormatBoldIcon />
+      </IconButton>
+      <IconButton
+        onClick={() => editor?.chain().focus().toggleItalic().run()}
+        color={editor?.isActive("italic") ? "primary" : "default"}
+      >
+        <FormatItalicIcon />
+      </IconButton>
+      <IconButton
+        onClick={() =>
+          editor?.chain().focus().toggleHeading({ level: 2 }).run()
+        }
+        color={
+          editor?.isActive("heading", { level: 2 }) ? "primary" : "default"
+        }
+      >
+        <TitleIcon />
+      </IconButton>
+      <IconButton
+        onClick={() => editor?.chain().focus().toggleBulletList().run()}
+        color={editor?.isActive("bulletList") ? "primary" : "default"}
+      >
+        <FormatListBulletedIcon />
+      </IconButton>
+      <IconButton
+        onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+        color={editor?.isActive("orderedList") ? "primary" : "default"}
+      >
+        <FormatListNumberedIcon />
+      </IconButton>
+    </Box>
+  );
+
+  return (
+    <Modal open={open} onClose={handleCancel}>
       <Box
         sx={{
           height: "90%",
@@ -49,7 +114,6 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-
           bgcolor: "background.paper",
           borderRadius: 2,
           boxShadow: 24,
@@ -59,26 +123,57 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
           gap: 2,
         }}
       >
-        <Typography id="article-modal-title" variant="h6">
-          写文章
-        </Typography>
+        <Typography variant="h6">文本</Typography>
+
         <TextField
           label="标题"
-          variant="outlined"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           fullWidth
         />
-        {/* 富文本编辑器 */}
-        <Box sx={{ flex: 1, overflow: "hidden" }}>
-          <ReactQuill
-            theme="snow"
-            value={content}
-            onChange={setContent}
-            style={{ height: "100%", maxHeight: "500px" }}
-            placeholder="请输入文章内容..."
-          />
+
+        {/* ✅ 富文本编辑区域 */}
+        <Box
+          sx={{
+            border: "1px solid #ccc",
+            borderRadius: 1,
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            height: "500px", // ✅ 改这里！固定高度，避免滚动计算错误
+          }}
+        >
+          {/* ✅ 工具栏固定顶部 */}
+          <Box
+            sx={{
+              borderBottom: "1px solid #ddd",
+              backgroundColor: "#fafafa",
+              p: 1,
+              position: "sticky", // ✅ 让 Toolbar 永远在上面
+              top: 0,
+              zIndex: 10,
+            }}
+          >
+            <Toolbar />
+          </Box>
+
+          {/* ✅ 编辑内容（可滚动区域） */}
+          <Box
+            sx={{
+              flex: 1,
+              overflowY: "auto", // ✅ 只让内容滚动
+              p: 2,
+              backgroundColor: "#fff",
+              "& .ProseMirror": {
+                minHeight: "400px",
+                outline: "none",
+              },
+            }}
+          >
+            <EditorContent editor={editor} />
+          </Box>
         </Box>
+
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
           <Button onClick={handleCancel} variant="outlined">
             取消

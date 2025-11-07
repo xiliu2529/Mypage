@@ -18,6 +18,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [bookmarks, setBookmarks] = useState<{ name: string; url: string }[]>(
     []
   );
+  //菜单显示
+  const [visible, setVisible] = useState(false);
 
   return (
     <ThemeProvider theme={theme}>
@@ -32,6 +34,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
           toggleDarkMode,
           bookmarks,
           setBookmarks,
+          visible,
+          setVisible,
         }}
       >
         {children}

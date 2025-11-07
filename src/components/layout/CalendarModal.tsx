@@ -4,7 +4,8 @@ import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useTheme } from "@mui/material/styles";
-
+import "dayjs/locale/zh-cn"; // ✅ 中文
+dayjs.locale("zh-cn");
 interface CalendarModalProps {
   open: boolean;
   onClose: () => void;
@@ -39,7 +40,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ open, onClose }) => {
         </Typography>
 
         {/* ✅ 一定要用 LocalizationProvider 包裹 */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="zh-cn">
           <DateCalendar
             sx={{
               bgcolor: theme.palette.background.default,
