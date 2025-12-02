@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Zoom from "@mui/material/Zoom";
-import { Article } from "../../types/article";
+import type { Article } from "../../types/article";
 
 interface ArticleGridProps {
   articles: Article[];

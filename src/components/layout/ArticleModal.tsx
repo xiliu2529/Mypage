@@ -154,103 +154,105 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
 
   return (
     <Modal open={open} onClose={handleCancel}>
-      <Box
-        sx={{
-          height: "90%",
-          width: "70%",
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          bgcolor: "background.paper",
-          borderRadius: 2,
-          boxShadow: 24,
-          p: 4,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-        }}
-      >
-        <Typography variant="h6">文本</Typography>
-
-        <TextField
-          label="标题"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          fullWidth
-        />
-
-        {/* ✅ 富文本编辑区域 */}
+      <>
         <Box
           sx={{
-            border: "1px solid #ccc",
-            borderRadius: 1,
-            overflow: "hidden",
+            height: "90%",
+            width: "70%",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
             display: "flex",
             flexDirection: "column",
-            height: "500px", // ✅ 改这里！固定高度，避免滚动计算错误
+            gap: 2,
           }}
         >
-          {/* ✅ 工具栏固定顶部 */}
+          <Typography variant="h6">文本</Typography>
+
+          <TextField
+            label="标题"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            fullWidth
+          />
+
+          {/* ✅ 富文本编辑区域 */}
           <Box
             sx={{
-              borderBottom: "1px solid #ddd",
-              backgroundColor: "#fafafa",
-              p: 1,
-              position: "sticky", // ✅ 让 Toolbar 永远在上面
-              top: 0,
-              zIndex: 10,
+              border: "1px solid #ccc",
+              borderRadius: 1,
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              height: "500px", // ✅ 改这里！固定高度，避免滚动计算错误
             }}
           >
-            <Toolbar />
+            {/* ✅ 工具栏固定顶部 */}
+            <Box
+              sx={{
+                borderBottom: "1px solid #ddd",
+                backgroundColor: "#fafafa",
+                p: 1,
+                position: "sticky", // ✅ 让 Toolbar 永远在上面
+                top: 0,
+                zIndex: 10,
+              }}
+            >
+              <Toolbar />
+            </Box>
+
+            {/* ✅ 编辑内容（可滚动区域） */}
+            <Box
+              sx={{
+                flex: 1,
+                overflowY: "auto", // ✅ 只让内容滚动
+                p: 2,
+                backgroundColor: "#fff",
+                "& .ProseMirror": {
+                  minHeight: "400px",
+                  outline: "none",
+                },
+              }}
+            >
+              <EditorContent editor={editor} />
+            </Box>
           </Box>
 
-          {/* ✅ 编辑内容（可滚动区域） */}
-          <Box
-            sx={{
-              flex: 1,
-              overflowY: "auto", // ✅ 只让内容滚动
-              p: 2,
-              backgroundColor: "#fff",
-              "& .ProseMirror": {
-                minHeight: "400px",
-                outline: "none",
-              },
-            }}
-          >
-            <EditorContent editor={editor} />
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
+            <Button onClick={handleCancel} variant="outlined" disabled={isSubmitting}>
+              取消
+            </Button>
+            <Button 
+              onClick={handleSubmit} 
+              variant="contained"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "发布中..." : "发布文章"}
+            </Button>
           </Box>
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-          <Button onClick={handleCancel} variant="outlined" disabled={isSubmitting}>
-            取消
-          </Button>
-          <Button 
-            onClick={handleSubmit} 
-            variant="contained"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "发布中..." : "发布文章"}
-          </Button>
-        </Box>
-      </Box>
-
-      {/* 成功/错误提示 */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert 
+        {/* 成功/错误提示 */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={3000}
           onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+          <Alert 
+            onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </>
     </Modal>
   );
 };

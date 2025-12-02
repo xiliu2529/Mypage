@@ -5,7 +5,7 @@ import CalendarModal from "@/components/layout/CalendarModal";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/useAppContext";
 import { articleService } from "../../services/articleService";
-import { Article } from "../../types/article";
+import type { Article } from "../../types/article";
 import "../../utils/testDatabase"; // 导入测试工具
 
 const User = () => {
@@ -16,10 +16,10 @@ const User = () => {
   const [loading, setLoading] = useState(true);
 
   // 加载文章数据
-  const loadArticles = () => {
+  const loadArticles = async () => {
     try {
       setLoading(true);
-      const articleData = articleService.getArticles();
+      const articleData = await articleService.getArticles();
       setArticles(articleData);
     } catch (error) {
       console.error('加载文章失败:', error);
@@ -41,9 +41,9 @@ const User = () => {
   }, []);
 
   // 处理文章提交
-  const handleArticleSubmit = (title: string, content: string) => {
+  const handleArticleSubmit = async (_title: string, _content: string) => {
     // 重新加载文章列表
-    loadArticles();
+    await loadArticles();
   };
 
   return (
