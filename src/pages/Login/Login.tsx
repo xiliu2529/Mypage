@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login, register } from "../../api";
+import { authService } from "../../services/authService";
 import {
   Container,
   Box,
@@ -9,7 +9,7 @@ import {
   Paper,
   Link,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true); // 登录 or 注册
@@ -19,6 +19,10 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // 获取登录前的路径，用于登录后重定向
+  const from = (location.state as any)?.from?.pathname || "/";
 
   const handleSubmit = async () => {
     const hasUsernameError = username.trim() === "";
@@ -30,25 +34,18 @@ const Login = () => {
     if (hasUsernameError || hasPasswordError) return;
 
     try {
-      const fn = isLogin ? login : register;
-      const data = await fn(username, password);
+      const result = isLogin 
+        ? await authService.login(username, password)
+        : await authService.register(username, password);
 
-      if (data.success) {
+      if (result.success) {
         alert(isLogin ? "✅ 登录成功！" : "✅ 注册成功！");
-
-        // 假设后端返回token字段叫token
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-          console.log("登录成功，token:", data.token);
-        } else {
-          console.warn("后端未返回 token");
-        }
-
-        // 登录成功后跳转主页（根据你的路由调整）
-        navigate("/");
+        
+        // 登录/注册成功后跳转到之前的页面或主页
+        navigate(from, { replace: true });
       } else {
         alert(
-          `❌ ${isLogin ? "登录" : "注册"}失败：` + (data.message || "未知错误")
+          `❌ ${isLogin ? "登录" : "注册"}失败：` + result.message
         );
       }
     } catch (err) {

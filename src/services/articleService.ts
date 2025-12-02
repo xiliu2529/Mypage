@@ -33,10 +33,7 @@ class ArticleService {
     return await articleServiceApi.searchArticles(keyword);
   }
 
-  // 初始化示例数据（可选）
-  initMockData(): void {
-    articleServiceApi.initMockData();
-  }
+
 }
 
 // 导出单例实例

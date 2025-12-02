@@ -11,6 +11,8 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import BookmarkManager from "./components/layout/BookmarkManager";
 import StarryBackground from "./components/layout/StarryBackground";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 import About from "./pages/About/About";
 import HomePage from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
@@ -74,7 +76,9 @@ const AnimatedRoutes = () => {
           path="/user"
           element={
             <PageWrapper>
-              <User />
+              <ProtectedRoute>
+                <User />
+              </ProtectedRoute>
             </PageWrapper>
           }
         />
@@ -84,37 +88,39 @@ const AnimatedRoutes = () => {
 };
 
 const App: React.FC = () => (
-  <Router>
-    <StarryBackground />
-    <BookmarkManager />
-    <Box
-      sx={{
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        boxSizing: "border-box",
-        height: "100%",
-        position: "relative",
-      }}
-    >
-      <Header />
-      <Container
-        maxWidth={false}
+  <ErrorBoundary>
+    <Router>
+      <StarryBackground />
+      <BookmarkManager />
+      <Box
         sx={{
-          width: "100%",
-          mt: 9,
-          height: "calc(100vh - 70px)",
-          overflowY: "auto",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          boxSizing: "border-box",
+          height: "100%",
+          position: "relative",
         }}
       >
-        <AnimatedRoutes />
-        <Footer />
-      </Container>
-    </Box>
-  </Router>
+        <Header />
+        <Container
+          maxWidth={false}
+          sx={{
+            width: "100%",
+            mt: 9,
+            height: "calc(100vh - 70px)",
+            overflowY: "auto",
+          }}
+        >
+          <AnimatedRoutes />
+          <Footer />
+        </Container>
+      </Box>
+    </Router>
+  </ErrorBoundary>
 );
 
 export default App;

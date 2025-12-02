@@ -7,24 +7,60 @@ import {
   Link,
   Stack,
   Button,
+  Menu,
+  MenuItem,
+  Avatar,
 } from "@mui/material";
+import { useState, useEffect } from "react";
 import trinity from "../../assets/trinity.png";
 import { useAppContext } from "../../context/useAppContext";
 import { useTheme } from "@mui/material/styles";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { authService } from "../../services/authService";
 
 const Header = () => {
   const { ballOn, setBallOn, darkMode, toggleDarkMode, setVisible } =
     useAppContext();
   const theme = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
+  
+  const [currentUser, setCurrentUser] = useState(authService.getCurrentUser());
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+
+
+  // 监听认证状态变化
   useEffect(() => {
-    if (location.pathname !== "/user") {
-      setVisible(false);
-    }
-  }, [location, setVisible]);
+    const checkAuthStatus = () => {
+      setCurrentUser(authService.getCurrentUser());
+    };
+
+    // 页面加载时检查认证状态
+    checkAuthStatus();
+    
+    // 定期检查认证状态（可选）
+    const interval = setInterval(checkAuthStatus, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    setCurrentUser(null);
+    handleMenuClose();
+    navigate('/');
+  };
+
+
 
   // 样式变量改成依赖 theme
   const appBarSx = {
@@ -109,23 +145,63 @@ const Header = () => {
           >
             关于
           </Link>
-          <Link
-            component={RouterLink}
-            to="/login"
-            underline="none"
-            sx={linkCommonSx}
-          >
-            登录
-          </Link>
-
-          <Link
-            component={RouterLink}
-            to="/user"
-            underline="none"
-            sx={linkCommonSx}
-          >
-            用户名
-          </Link>
+          {currentUser ? (
+            <>
+              <Link
+                component={RouterLink}
+                to="/user"
+                underline="none"
+                sx={linkCommonSx}
+              >
+                {currentUser.username}
+              </Link>
+              <Button
+                onClick={handleMenuOpen}
+                sx={{ 
+                  ...linkCommonSx, 
+                  minWidth: 'auto', 
+                  padding: '8px 12px',
+                  textTransform: 'none'
+                }}
+              >
+                <Avatar 
+                  sx={{ 
+                    width: 32, 
+                    height: 32,
+                    bgcolor: theme.palette.primary.main 
+                  }}
+                >
+                  {currentUser.username.charAt(0).toUpperCase()}
+                </Avatar>
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <MenuItem onClick={handleLogout}>
+                  登出
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Link
+              component={RouterLink}
+              to="/login"
+              underline="none"
+              sx={linkCommonSx}
+            >
+              登录
+            </Link>
+          )}
         </Stack>
         <Button onClick={() => setBallOn(!ballOn)} sx={buttonSx}>
           跟随
