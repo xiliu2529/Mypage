@@ -6,6 +6,8 @@ import {
   TextField,
   Button,
   IconButton,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -15,6 +17,7 @@ import FormatItalicIcon from "@mui/icons-material/FormatItalic";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import TitleIcon from "@mui/icons-material/Title";
+import { articleService } from "../../services/articleService";
 
 interface ArticleModalProps {
   open: boolean;
@@ -28,6 +31,16 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
   onSubmit,
 }) => {
   const [title, setTitle] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
 
   const editor = useEditor({
     extensions: [
@@ -39,15 +52,50 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
     content: "",
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const content = editor?.getHTML() || "";
-    if (title.trim() && content.trim()) {
+    
+    if (!title.trim() || !content.trim()) {
+      setSnackbar({
+        open: true,
+        message: "标题和内容不能为空！",
+        severity: 'error',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // 保存文章到数据库
+      await articleService.createArticle({
+        title: title.trim(),
+        content: content.trim(),
+      });
+
+      // 调用父组件的回调
       onSubmit(title, content);
+      
+      // 重置表单
       setTitle("");
       editor?.commands.clearContent();
       onClose();
-    } else {
-      alert("标题和内容不能为空！");
+      
+      // 显示成功提示
+      setSnackbar({
+        open: true,
+        message: "文章发布成功！",
+        severity: 'success',
+      });
+    } catch (error) {
+      console.error('发布文章失败:', error);
+      setSnackbar({
+        open: true,
+        message: "发布文章失败，请重试！",
+        severity: 'error',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -175,14 +223,34 @@ const ArticleModal: React.FC<ArticleModalProps> = ({
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-          <Button onClick={handleCancel} variant="outlined">
+          <Button onClick={handleCancel} variant="outlined" disabled={isSubmitting}>
             取消
           </Button>
-          <Button onClick={handleSubmit} variant="contained">
-            提交
+          <Button 
+            onClick={handleSubmit} 
+            variant="contained"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "发布中..." : "发布文章"}
           </Button>
         </Box>
       </Box>
+
+      {/* 成功/错误提示 */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Modal>
   );
 };

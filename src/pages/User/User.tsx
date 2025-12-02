@@ -4,93 +4,47 @@ import ArticleModal from "@/components/layout/ArticleModal";
 import CalendarModal from "@/components/layout/CalendarModal";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/useAppContext";
+import { articleService } from "../../services/articleService";
+import { Article } from "../../types/article";
+import "../../utils/testDatabase"; // 导入测试工具
 
 const User = () => {
   const { visible, setVisible } = useAppContext();
   const [openArticleModal, setOpenArticleModal] = useState(false);
   const [openCalendarModal, setOpenCalendarModal] = useState(false);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 加载文章数据
+  const loadArticles = () => {
+    try {
+      setLoading(true);
+      const articleData = articleService.getArticles();
+      setArticles(articleData);
+    } catch (error) {
+      console.error('加载文章失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 500);
     return () => clearTimeout(timer);
   }, [setVisible]);
 
-  const mockArticles = [
-    {
-      title: "React 18 新特性详解",
-      content: `React 18 引入了许多令人兴奋的新特性，这些特性旨在提升应用性能和开发体验。
-  
-  主要新特性包括：
-  
-  1. 并发渲染（Concurrent Rendering）
-     - 允许React在渲染过程中中断和恢复工作
-     - 提供更流畅的用户体验
-     - 支持优先级调度
-  
-  2. 自动批处理（Automatic Batching）
-     - 在事件处理函数、Promise、setTimeout等中自动批处理状态更新
-     - 减少不必要的重新渲染
-  
-  3. 新的API
-     - useId：生成唯一的ID
-     - useSyncExternalStore：用于外部存储的同步
-     - useInsertionEffect：用于CSS-in-JS库
-  
-  4. 严格模式更新
-     - 在开发模式下模拟组件卸载和重新挂载
-     - 帮助发现隐藏的bug
-  
-  这些新特性使得React应用能够更好地处理复杂的用户界面和大量的数据更新。`,
-      date: "2024-01-15",
-    },
-    {
-      title: "TypeScript 高级技巧",
-      content:
-        "学习 TypeScript 的高级类型操作、泛型应用和装饰器模式，让你的代码更加类型安全和可维护。",
-      date: "2024-01-12",
-    },
-    {
-      title: "前端性能优化指南",
-      content:
-        "从代码分割、懒加载到缓存策略，全面介绍前端性能优化的各种技术和工具。",
-      date: "2024-01-10",
-    },
-    {
-      title: "CSS Grid 布局实战",
-      content:
-        "通过实际案例学习 CSS Grid 布局的强大功能，创建复杂的响应式页面布局。",
-      date: "2024-01-08",
-    },
-    {
-      title: "Node.js 微服务架构",
-      content:
-        "使用 Node.js 构建微服务架构，包括服务发现、负载均衡和分布式追踪等关键技术。",
-      date: "2024-01-05",
-    },
-    {
-      title: "Webpack 5 配置指南",
-      content:
-        "深入了解 Webpack 5 的新特性和配置技巧，优化你的构建流程和打包结果。",
-      date: "2024-01-03",
-    },
-    {
-      title: "前端测试最佳实践",
-      content:
-        "学习如何使用 Jest、Testing Library 等工具进行前端单元测试和集成测试。",
-      date: "2024-01-01",
-    },
-    {
-      title: "响应式设计原理",
-      content:
-        "掌握响应式设计的核心原理和实现技巧，确保网站在各种设备上都能完美显示。",
-      date: "2023-12-28",
-    },
-    {
-      title: "前端安全防护策略",
-      content:
-        "了解常见的前端安全漏洞和防护措施，保护你的应用免受 XSS、CSRF 等攻击。",
-      date: "2023-12-25",
-    },
-  ];
+  useEffect(() => {
+    // 初始化示例数据（如果没有数据）
+    articleService.initMockData();
+    // 加载文章
+    loadArticles();
+  }, []);
+
+  // 处理文章提交
+  const handleArticleSubmit = (title: string, content: string) => {
+    // 重新加载文章列表
+    loadArticles();
+  };
 
   return (
     <Box sx={{ m: 10 }}>
@@ -108,7 +62,15 @@ const User = () => {
           flexWrap: "wrap", // 多个卡片换行
         }}
       >
-        <ArticleCard articles={mockArticles} />
+        {loading ? (
+          <Typography variant="body1">加载中...</Typography>
+        ) : articles.length === 0 ? (
+          <Typography variant="body1" color="text.secondary">
+            还没有文章，点击右侧"写作"按钮开始创作吧！
+          </Typography>
+        ) : (
+          <ArticleCard articles={articles} />
+        )}
       </Box>
       <Box>
         {visible && (
@@ -132,7 +94,7 @@ const User = () => {
         <ArticleModal
           open={openArticleModal}
           onClose={() => setOpenArticleModal(false)}
-          onSubmit={(title, content) => console.log(title, content)}
+          onSubmit={handleArticleSubmit}
         />
 
         <CalendarModal

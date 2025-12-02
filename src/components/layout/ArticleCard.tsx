@@ -7,12 +7,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Zoom from "@mui/material/Zoom";
-
-interface Article {
-  title: string;
-  content: string;
-  date: string;
-}
+import { Article } from "../../types/article";
 
 interface ArticleGridProps {
   articles: Article[];
@@ -69,11 +64,19 @@ const ArticleCard: React.FC<ArticleGridProps> = ({ articles }) => {
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 📅 {article.date}
               </Typography>
-              <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
-                {article.content.length > 100
-                  ? article.content.slice(0, 100) + "..."
-                  : article.content}
-              </Typography>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  lineHeight: 1.6,
+                  '& p': { margin: 0 },
+                  '& h1, & h2, & h3': { margin: '8px 0' },
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: article.content.length > 100
+                    ? article.content.replace(/<[^>]*>/g, '').slice(0, 100) + "..."
+                    : article.content.replace(/<[^>]*>/g, '')
+                }}
+              />
             </CardContent>
             <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
               <Button
@@ -141,18 +144,23 @@ const ArticleCard: React.FC<ArticleGridProps> = ({ articles }) => {
                   📅 发布时间: {selectedArticle.date}
                 </Typography>
 
-                <Box id="article-modal-description" sx={{ mt: 2 }}>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      lineHeight: 1.8,
-                      fontSize: "1.1rem",
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {selectedArticle.content}
-                  </Typography>
-                </Box>
+                <Box 
+                  id="article-modal-description" 
+                  sx={{ 
+                    mt: 2,
+                    lineHeight: 1.8,
+                    fontSize: "1.1rem",
+                    '& p': { margin: '12px 0' },
+                    '& h1': { fontSize: '2rem', margin: '24px 0 16px 0', fontWeight: 'bold' },
+                    '& h2': { fontSize: '1.5rem', margin: '20px 0 12px 0', fontWeight: 'bold' },
+                    '& h3': { fontSize: '1.25rem', margin: '16px 0 10px 0', fontWeight: 'bold' },
+                    '& ul, & ol': { margin: '12px 0', paddingLeft: '24px' },
+                    '& li': { margin: '6px 0' },
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: selectedArticle.content
+                  }}
+                />
 
                 {/* 操作按钮 */}
                 <Box sx={{ mt: 4, display: "flex", gap: 2 }}>
